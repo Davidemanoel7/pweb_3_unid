@@ -1,3 +1,4 @@
+
 export default function Musics({data, pesquisa}){
     return (    
         <div>  
@@ -7,7 +8,7 @@ export default function Musics({data, pesquisa}){
             </form>
 
             <div>  
-                {data.response.docs.map((m) => <div style={{marginBottom:"30px"}}> Nome da música: {m.title} | Artista/Banda: {m.band}</div>)}                   
+            {data.articles?.map((m) => <div style={{marginBottom:"30px"}}> TItulo da noticia: {m.title} | Autor do artigo: {m.author}<br></br> <img src={m.urlToImage} alt="Não foi possivel carregar a imagem"></img><br></br> {m.description} <a href={m.url} target="_blank"> Notícia completa</a></div>)}                   
             </div>    
         </div>    
     )    
@@ -18,7 +19,7 @@ export default function Musics({data, pesquisa}){
 export async function getServerSideProps(context){
 
     const {pesquisa} = context.query;
-    const res = await fetch(`https://api.vagalume.com.br/search.mus?apikey=62cd865060c7451036501ec5b9f85d90&q=` + pesquisa)
+    const res = await fetch(`https://newsapi.org/v2/everything?q=${pesquisa}&sortBy=publishedAt&apiKey=82912a10c2e143659df8b64699cb5d39`)
   
     const data = await res.json()  
         return {
