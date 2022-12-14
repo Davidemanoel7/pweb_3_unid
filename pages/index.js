@@ -8,7 +8,7 @@ export default function Musics({data, pesquisa}){
             </form>
 
             <div>  
-                {data.articles?.map((m) => <div style={{marginBottom:"30px"}}> TItulo da noticia: {m.title} | Autor do artigo: {m.author}<br></br> <img src={m.urlToImage}></img><br></br> {m.description} <a href={m.url}> Notícia completa</a></div>)}                   
+                {data.articles?.map((m) => <div style={{marginBottom:"30px"}}> TItulo da noticia: {m.title} | Autor do artigo: {m.author}<br></br> <img src={m.urlToImage} alt="Não foi possivel carregar a imagem"></img><br></br> {m.description} <a href={m.url} target="_blank"> Notícia completa</a></div>)}                   
             </div>    
         </div>    
     )    
