@@ -1,9 +1,4 @@
-import { Button } from 'react-bootstrap';
-
-import Button from 'react-bootstrap/Button';
-import Card from 'react-bootstrap/Card';
-
-export default function Musics({data, pesquisa}){
+export default function News({data,pesquisa}){
     console.log(data)
     return (    
         <div>  
@@ -11,22 +6,10 @@ export default function Musics({data, pesquisa}){
                 <input type="text" name="pesquisa" placeholder="Procurar música:" defaultValue={pesquisa}></input>
                 <input type="submit" value="&#128269;"></input>
             </form>
-            <Button variant="privary" onClick={alert('clicou')}>test</Button> 
             <div>  
-                {data.articles?.map((m) => <div style={{marginBottom:"30px"}}> TItulo da noticia: {m.title} | Autor do artigo: {m.author}<br></br> <img src={m.urlToImage} alt="Não foi possivel carregar a imagem"></img><br></br> {m.description} <a href={m.url} target="_blank"> Notícia completa</a></div>)}
-
-                <Card style={{ width: '18rem' }}>
-                    <Card.Img variant="top" src={m.urlToImage} />
-                    <Card.Body>
-                        <Card.Title>{m.title}</Card.Title>
-                        <Card.Text>
-                            {m.description}
-                        </Card.Text>
-                        <Button variant="primary">Veja mais</Button>
-                    </Card.Body>
-                </Card>                   
-            </div>
-               
+                {data.map((m) => <div style={{marginBottom:"30px"}}> Título da noticia: {m.title} | Autor do artigo: {m.owner_username}<br></br> <a href={m.source_url} target="_blank"> Noticia completa</a>
+                </div>)}                 
+            </div>   
         </div>    
     )    
 }
@@ -34,9 +17,8 @@ export default function Musics({data, pesquisa}){
 //<img src={m.Poster}></img>
 
 export async function getServerSideProps(context){
-    
     const {pesquisa} = context.query;
-    const res = await fetch(`https://newsapi.org/v2/everything?q=${pesquisa}&sortBy=publishedAt&apiKey=82912a10c2e143659df8b64699cb5d39`)
+    const res = await fetch(`https://www.tabnews.com.br/api/v1/contents`)
   
     const data = await res.json()  
         return {
@@ -45,6 +27,4 @@ export async function getServerSideProps(context){
             }
         }  
 }
-
-
 //api : https://api.vagalume.com.br/search.mus?apikey=62cd865060c7451036501ec5b9f85d90&q=love&limit=10
