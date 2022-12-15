@@ -1,5 +1,5 @@
 export default function News({data,pesquisa}){
-    console.log(data)
+    //console.log(data)
     return (    
         <div>  
             <form method="GET" style={{marginBottom: "20px"}}>
@@ -7,7 +7,7 @@ export default function News({data,pesquisa}){
                 <input type="submit" value="&#128269;"></input>
             </form>
             <div>  
-                {data.map((m) => <div style={{marginBottom:"30px"}}> Título da noticia: {m.title} | Autor do artigo: {m.owner_username}<br></br> <a href={m.source_url} target="_blank"> Noticia completa</a>
+                {data.map((m) => <div style={{marginBottom:"30px"}}> <strong>Título da noticia: {m.title}</strong> | Autor do artigo: {m.owner_username}<br></br> <a href={m.source_url} target="_blank"> Noticia completa</a>
                 </div>)}                 
             </div>   
         </div>    
@@ -27,4 +27,3 @@ export async function getServerSideProps(context){
             }
         }  
 }
-//api : https://api.vagalume.com.br/search.mus?apikey=62cd865060c7451036501ec5b9f85d90&q=love&limit=10
