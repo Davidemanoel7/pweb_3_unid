@@ -1,12 +1,12 @@
 import useSWR from 'swr'
-
 import {useRouter} from 'next/router'
 
-export default function Movies(){
+export default function News(){
     const router = useRouter();
-    const {imdbID} = router.query;
+    const parametro = router.query;
 
-    const {data, error} = useSWR(`https://www.tabnews.com.br/api/v1/${imdbID}?page=1&per_page=10&strategy=new`, fetcher); 
+    const {data, error} = useSWR(`https://www.tabnews.com.br/api/v1/contents/${parametro.owner_username}/${parametro.slug}
+    `,  fetcher); 
 
     if (error) return <div>falha na requisição...</div>
     if (!data) return <div>carregando...</div>
@@ -18,12 +18,10 @@ export default function Movies(){
                 <p></p>
                 <a href={m.source_url} target="_blank"> Noticia completa</a>
             </div>
-            <a href='quest1/'>Página inicial</a>
+            <a href='index/'>Página inicial</a>
         </div>
     )    
 }
-
-
 
 async function fetcher(url) {
     const res = await fetch(url);
