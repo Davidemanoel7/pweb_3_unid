@@ -32,7 +32,7 @@ async function fetcher(url) {
     return json;
 }
 
-/*
+
 export async function getServerSideProps(context){
     const {pesquisa} = context.query;
     const res = await fetch(`https://www.tabnews.com.br/api/v1/contents`)
@@ -44,4 +44,3 @@ export async function getServerSideProps(context){
             }
         }  
 }
-*/

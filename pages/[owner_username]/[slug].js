@@ -3,9 +3,11 @@ import {useRouter} from 'next/router'
 
 export default function News(){
     const router = useRouter();
-    const parametro = router.query;
+    const {owner_username, slug} = router.query;
+    console.log(owner_username)
+    console.log(slug)
 
-    const {data, error} = useSWR(`https://www.tabnews.com.br/api/v1/contents/${parametro.owner_username}/${parametro.slug}
+    const {data, error} = useSWR(`https://www.tabnews.com.br/api/v1/contents/${owner_username}/${slug}
     `,  fetcher); 
 
     if (error) return <div>falha na requisição...</div>
@@ -13,12 +15,12 @@ export default function News(){
     return (
         <div>
             <div>
-                <strong>Título da noticia: {m.title}</strong> Autor do artigo: {m.owner_username}<br></br>
+                <strong>Título da noticia: {data.title}</strong> <br/> Prelúdio: {data.body} <br/> Autor do artigo: {data.owner_username}<br/>
                 <p>{data.tabcoins}  Updated in {data.updated_at}</p>
                 <p></p>
-                <a href={m.source_url} target="_blank"> Noticia completa</a>
+                <a href={data.source_url} target="_blank"> Noticia completa</a>
             </div>
-            <a href='index/'>Página inicial</a>
+            <a href='../'>Página inicial</a>
         </div>
     )    
 }
