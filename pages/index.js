@@ -1,5 +1,11 @@
 import useSWR from 'swr'
 
+import Button from '@mui/material/Button';
+import Card from '@mui/material/Card';
+import CardActions from '@mui/material/CardActions';
+import CardContent from '@mui/material/CardContent';
+import Typography from '@mui/material/Typography';
+
 export default function News(){
     //console.log(data)
 
@@ -15,16 +21,23 @@ export default function News(){
                 <input type="submit" value="&#128269;"></input>
             </form>
 
-            <div>  
-            { data.map((m) => <div><a key={`${m.owner_username}/${m.slug}`} href={`${m.owner_username}/${m.slug}`}>{m.title}</a></div>)}                
-            </div> 
-
+            {(data.map((m) => 
+                        <Card sx={{ maxWidth: "90%", margin: "8px 2vh", display: "block"}}>
+                                <CardContent>
+                                    <Typography gutterBottom variant="h5" component="div">
+                                        {m.title}
+                                    </Typography>
+                                    <Typography variant="body1" color="text.primary">{m.owner_username}</Typography>
+                                    <Typography variant="body2" color="text.secondary">
+                                        {m.slug}
+                                    </Typography>
+                                </CardContent>
+                                <Button variant="contained" size="small" key={`${m.owner_username}/${m.slug}`} href={`${m.owner_username}/${m.slug}`}>Ver mais</Button>
+                        </Card>))
+                }
         </div>    
     )    
 }
-
-//<img src={m.Poster}></img>
-
 
 async function fetcher(url) {
     const res = await fetch(url);
@@ -33,6 +46,8 @@ async function fetcher(url) {
 }
 
 
+
+/*
 export async function getServerSideProps(context){
     const {pesquisa} = context.query;
     const res = await fetch(`https://www.tabnews.com.br/api/v1/contents`)
@@ -44,3 +59,4 @@ export async function getServerSideProps(context){
             }
         }  
 }
+*/
