@@ -1,15 +1,15 @@
 import useSWR from 'swr'
+import {useState} from 'react'
+
 
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 
-export default function News(){
-    //console.log(data)
-
+export default function Home(){
     const {data, error, pesquisa} = useSWR(`https://www.tabnews.com.br/api/v1/contents`, fetcher)
+
 
     if (error) return <div>falha na requisição...</div>
     if (!data) return <div>carregando...</div>
@@ -29,14 +29,15 @@ export default function News(){
                                     </Typography>
                                     <Typography variant="body1" color="text.primary">{m.owner_username}</Typography>
                                     <Typography variant="body2" color="text.secondary">
-                                        {m.slug}
+                                        {m.title}...
                                     </Typography>
-                                </CardContent>
-                                <Button variant="contained" size="small" key={`${m.owner_username}/${m.slug}`} href={`${m.owner_username}/${m.slug}`}>Ver mais</Button>
+                                    <br/>
+                                    <Button variant="contained" size="small" key={`${m.owner_username}/${m.slug}`} href={`/selectednews/${m.owner_username}__${m.slug}`}>Ver mais</Button>
+                                </CardContent>                                
                         </Card>))
                 }
-        </div>    
-    )    
+        </div> 
+    )
 }
 
 async function fetcher(url) {
@@ -44,19 +45,3 @@ async function fetcher(url) {
     const json = await res.json();
     return json;
 }
-
-
-
-/*
-export async function getServerSideProps(context){
-    const {pesquisa} = context.query;
-    const res = await fetch(`https://www.tabnews.com.br/api/v1/contents`)
-  
-    const data = await res.json()  
-        return {
-            props: {  
-                data
-            }
-        }  
-}
-*/

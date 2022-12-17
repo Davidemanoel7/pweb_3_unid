@@ -3,5 +3,5 @@
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
   "/": "pages/index.js",
-  "/[owner_username]/[slug]": "pages/[owner_username]/[slug].js"
+  "/selectednews/[newsid]": "pages/selectednews/[newsid].js"
 }
