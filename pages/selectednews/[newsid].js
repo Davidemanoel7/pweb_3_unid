@@ -3,28 +3,52 @@ import {useRouter} from 'next/router'
 
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
+import Link from '@mui/material/Link';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import MuiMarkdown from 'mui-markdown';
 
 
+//Skeleton
+import Skeleton from '@mui/material/Skeleton';
+
+
 export default function News({data,error}){
   
   if (error) return <div>falha na requisição...</div>
-  if (!data) return <div>carregando...</div>
+  if (!data) return (
+      <div>
+          <Stack spacing={1}>
+              <Skeleton variant="text" sx={{ fontSize: '2.5rem', height:"120" }} />
+              <Skeleton variant="text" sx={{ fontSize: '1rem' }} />
+              <Skeleton variant="text" sx={{ fontSize: '1rem' }} />
+
+              <Skeleton variant="rectangular" width={'100%'} height={100} />
+              <Skeleton variant="text" sx={{ fontSize: '1rem' }} />
+              <Skeleton variant="text" sx={{ fontSize: '1rem' }} />
+              <Skeleton variant="rectangular" width={'100%'} height={100} />
+              <Skeleton variant="rectangular" width={'100%'} height={100} />
+              <Skeleton variant="rectangular" width={'100%'} height={100} />
+          </Stack>
+      </div>
+    )
+
+
   return (
       <div>
 
           <div>
-              <Card sx={{ maxWidth: "90%", margin: "8px 2vh", display: "block"}}>
+              <Card sx={{ maxWidth: "100%", margin: "8px 2vh", display: "block"}}>
                 <CardContent>
                   <Typography gutterBottom variant="h4" component="div">
                       {data.title}
                   </Typography>
 
                   <Typography variant="body1" color="text.secundary">
-                    Autor: <strong><a href={`https://www.tabnews.com.br/${data.owner_username}`} target="_blank">{data.owner_username}</a></strong>
+                    Autor: <Link href={`https://www.tabnews.com.br/${data.owner_username}`} target="_blank" underline="hover">{data.owner_username}</Link>
+                    <br/>
+                    <Link href="#" underline="hover">Ver mais desse autor</Link>
                   </Typography>
                   
                   <Typography variant="body1" color="text.secondary">
