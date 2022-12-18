@@ -1,219 +1,127 @@
 import useSWR from 'swr'
-
 import {useState} from 'react'
-import { Table, Input, Space, Typography, Spin, Button, Modal  } from 'antd';
-const { Column } = Table;
-import 'antd/dist/antd.css'; 
-import { useRouter } from 'next/router';
-import { faArrowDown19, faArrowDownAZ, faArrowUp19, faArrowUpAZ, faCoffee } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
-let onClickSort;
-let order = 'ASC';
 
-export default function Index(){
-    const [state, setState] = useState({url:'https://vpic.nhtsa.dot.gov/api/vehicles/getallmakes?format=json', titleSearchString:'', orderBy: {index: '', order: 'ASC'}});
-    const [validate, setValidate] = useState({message: ''});
-    const {data, error} = useSWR(`${state.url}&s=${state.titleSearchString}`, async (u) => {
-        if (!state.url || state.url === '') {
-            return {Results: ''};  
-        }
 
-        const res = await fetch(state.url);
+import Button from '@mui/material/Button';
+import Card from '@mui/material/Card';
+import Link from '@mui/material/Link';
+import CardContent from '@mui/material/CardContent';
+import Typography from '@mui/material/Typography';
+import Stack from '@mui/material/Stack';
+import MuiMarkdown from 'mui-markdown';
+
+
+
+//Skeleton
+import Skeleton from '@mui/material/Skeleton';
+
+
+
+export default function NewHome(){
+
+    const [state, setState] = useState({url:'', strategy:''})
+    const {data, error} = useSWR(state.url, async (u) => {
+        if (!state.url || !state.strategy) return {Search:''}
+        if (state.url === '' || state.strategy ==='') return {Search:''}
+        const res = await fetch(`${state.url}${state.strategy}`)
         const json = await res.json();
         return json;
-    });
-
-    if(data && data.Results !== '') {
-        data.Results = data.Results.filter(result => result.Make_Name.toUpperCase().indexOf(state.titleSearchString.toUpperCase()) > -1);
-    }
-
-    if(state.orderBy && state.orderBy.index !== '') {
-        if (data && data.Results) {
-            data.Results.sort((a, b) => {
-                if (state.orderBy.order === 'ASC') {
-                    return (a[state.orderBy.index] > b[state.orderBy.index]) ? 1 : -1;
-                } else {
-                    return (b[state.orderBy.index] > a[state.orderBy.index]) ? 1 : -1;
-                }
-            });
+    })
+//https://www.tabnews.com.br/api/v1contents?&per_page=30&strategy=
+    const onClickHandler = e => {
+        e.preventDefault()
+        let s = document.getElementById('strategy').value
+        if (state.url === '') {
+            setState({url:'https://www.tabnews.com.br/api/v1contents?&per_page=50&strategy',strategy:s})
         }
+        else setState({url:'',strategy: state.strategy})
     }
 
-    onClickSort = (dataIndex) => {
-        setState({
-            url: 'https://vpic.nhtsa.dot.gov/api/vehicles/getallmakes?format=json', 
-            titleSearchString: state.titleSearchString, 
-            orderBy: {index: dataIndex, order: state.orderBy.order === 'ASC' ? 'DESC' : 'ASC'}
-        });
 
-        order = state.orderBy.order === 'ASC' ? 'DESC' : 'ASC';
-    }
-
-    const onClickHandler = (e, type='search') => {
-        e.preventDefault();
-        let search = document.getElementById('titleSearchString').value;
-
-        if (e.keyCode === 13 || type === 'show') {
-            if (search === '') {
-                setValidate({message: 'O campo de pesquisa é obrigatório.'});
-            } else if (type === 'search'){    
-                setState({
-                    url: 'https://vpic.nhtsa.dot.gov/api/vehicles/getallmakes?format=json', 
-                    titleSearchString: search,
-                    orderBy: state.orderBy
-                });
-                setValidate({message: ''});
-            } else if (type === 'show'){
-                if (state.url === '') {
-                    setState({
-                        url: 'https://vpic.nhtsa.dot.gov/api/vehicles/getallmakes?format=json', 
-                        titleSearchString: state.titleSearchString,
-                        orderBy: state.orderBy
-                    });
-                } else {
-                    setState({
-                        url: '', 
-                        titleSearchString: state.titleSearchString,
-                        orderBy: state.orderBy
-                    });
-                }
-                setValidate({message: ''});
-            }
-        }
-    }
 
     return (
         <div>
-            <TheForm message={validate.message} handler={onClickHandler}/>
-            <TheLink url={state.url} handler={onClickHandler}/>
-            <TheMakes data={data ? data: {Results: ''} } show={state.url !== ''}/>
+            <TheForm/>
+            <TheLink url={state.url} handler={onClickHandler} />
+            <TheNews data={data ? data: {Search:''} } show={state.url !== ''} />       
         </div>
     )
+
 }
 
-export function TheForm({message, handler}){
+
+
+
+export function TheForm(){
     return (
-        <div className="space-align-container">
-            <div className="space-align-block">
-                <Space direction="horizontal" style={{width: '100%', justifyContent: 'center', padding: 10}}>
-                    <Input
-                        id='titleSearchString'
-                        name='titleSearchString'
-                        placeholder="Pesquise por marcas"
-                        size="middle"
-                        onKeyUp={handler}
-                    />
-                </Space>
-                <Space direction="horizontal" style={{width: '100%', justifyContent: 'center', padding: 10}}>
-                    <p style={{color: 'red'}}>{ message }</p>
-                </Space>
-            </div>
+        <div>
+            <form>
+                <input id="strategy" name="strategy" type="text" autoComplete="true" placeholder='Busque aqui'/>
+            </form>
         </div>
     )
-
 }
 
-export function TheMakes({data,show}){
-    const [isModalOpen, setIsModalOpen] = useState(null);
-    const [make, setMake] = useState(null);
 
-    const showModal = (make) => {
-        setMake(make);
-        setIsModalOpen(true);
-    };
-
-    const handleOk = () => {
-        setIsModalOpen(false);
-    };
-
-    const handleCancel = () => {
-        setIsModalOpen(false);
-    };
-    
-    if (!show || !data) return (<div></div>);    
-
-    if (data.Error) {
-        return (
-            <Error error={data.Error}/>
-        )
-    }
-
-    if (data.Results === '' ) {
-        return <Spin/>
-    }
-
-    let dados = data.Results.map((m) => {
-        return { 
-            ...m,
-            key: m.Make_ID
-        };
-    });
+export function TheNews({data,show}){
+    if (!show) return (<div></div>)
+    if (!data) return (<div>
+        vazio
+    </div>)
+    if (data.error) return (<div>falha na pesquisa</div>)
+    if (data.Search === '' ) return (<div>
+        nothing
+    </div>)
 
     return (
         <div>
-            <Table onRow={(make) => {
-                    return {
-                        onClick: () => {
-                            showModal(make)
-                        },
-                    };
-                }} 
-                dataSource={dados} 
-                columns={columns}
-            />  
+            {data.Search.map( (data) => 
+                <Card sx={{ maxWidth: "100%", margin: "8px 2vh", display: "block"}}>
+                    <CardContent>
+                    <Typography gutterBottom variant="h4" component="div">
+                        {data.title}
+                    </Typography>
 
-            <MakeModal isModalOpen={isModalOpen} handleOk={handleOk} handleCancel={handleCancel} make={make}/>
+                    <Typography variant="body1" color="text.secundary">
+                        Autor: <Link href={`https://www.tabnews.com.br/${data.owner_username}`} target="_blank" underline="hover">{data.owner_username}</Link>
+                        <br/>
+                        <Link href="#" underline="hover">Ver mais desse autor</Link>
+                    </Typography>
+                    
+                    <Typography variant="body1" color="text.secondary">
+                        <strong>Prelúdio: </strong><MuiMarkdown>{data.body}</MuiMarkdown>
+                    </Typography>
+                    <br/>
+                    <Typography variant="body5" color="text.secondary">
+                        <strong>Data de publicação:</strong> {data.updated_at}
+                    </Typography> 
+                    <br/><br/>
+                    <Stack direction="row" spacing={1}>
+                        {disabledButton(data.source_url)}
+                        <Button variant="contained" href='../'>Página inicial</Button>
+                    </Stack>
+                    </CardContent>                              
+                </Card>
+                )
+            }           
+
         </div>
     )
 }
 
-const columns = [
-    {
-        title: () => <>ID <SortIcon dataIndex="Make_ID" type="number" /></>, 
-        dataIndex: 'Make_ID',
-        render: (_, make) => <a href={"make/" + make.key}>{make.key}</a>,
-    },
-    {
-        title: () => <>Nome <SortIcon dataIndex="Make_Name"/></>, 
-        dataIndex: 'Make_Name',
-    },
-];
-
-export function MakeModal({isModalOpen, handleOk, handleCancel, make}){
-    if (make) {
-        return (
-            <Modal title="Make Modal" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
-                <p><strong>Make ID: </strong>{make.Make_ID}</p>
-                <p><strong>Make Name: </strong>{make.Make_Name}</p>
-            </Modal>
-        );
-    }
-}
-
-export function TheLink({url, handler}){    
+export function TheLink({url, handler}){
     return (
         <div>
-            <a style={{padding: 10}} onClick={event => handler(event, 'show')}> {url === '' ? 'Mostrar' : 'Ocultar'} </a>
+            <a href="/movies3.js" onClick={handler}> {url === '' ? 'Mostrar' : 'Ocultar'} </a>
         </div>
-    );
-}
-
-export function GoBack() {
-    const router = useRouter();
-    return (<a onClick={() => router.back()}>Voltar</a>);
-}
-
-export function Error({error}) {
-    return (
-        <Typography.Title level={1} style={{ margin: 10 }}>
-            {error}
-        </Typography.Title>
     )
 }
 
-export function SortIcon({dataIndex, type="letter"}) {
-    return (
-        <Button onClick={() => onClickSort(dataIndex)} ghost="true" type="white" shape="circle" icon={<FontAwesomeIcon color='#1890ff' icon={type==='letter' ? (order === 'ASC' ? faArrowDownAZ : faArrowUpAZ) : (order === 'ASC' ? faArrowDown19 : faArrowUp19)} />}/>
+
+export function disabledButton(url){
+    if (url == null) return (<Button variant="contained" disabled>Noticia completa</Button> )
+    return(
+      <Button variant="contained" href={url} target='_blank'>Noticia completa</Button> 
     )
 }

@@ -2,100 +2,121 @@ import useSWR from 'swr'
 import {useState} from 'react'
 
 
+
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
+import Link from '@mui/material/Link';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
+import MuiMarkdown from 'mui-markdown';
 
-import TextField from '@mui/material/TextField';
+
 //Skeleton
 import Skeleton from '@mui/material/Skeleton';
 
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
 
-import Box from '@mui/material/Box';
 
-export default function Home({d}){
-    const {data, error} = useSWR(`https://www.tabnews.com.br/api/v1/contents`, fetcher)
-    const [selected, setSelected] = useState("demo-simple-select");
-    
-    async function newLink(d){
-        const {data, error} =  useSWR(`https://www.tabnews.com.br/api/v1contents?&per_page=30&strategy=${d}`, fetcher)
-        const resJson = await res.json()
-        return resJson
+export default function NewHome(){
+
+    const [state, setState] = useState({url:'', strategy:''})
+    const {data, error} = useSWR(state.url, async (u) => {
+        if (!state.url || !state.strategy) return {Search:''}
+        if (state.url === '' || state.strategy ==='') return {Search:''}
+        const res = await fetch(`${state.url}${state.strategy}`)
+        const json = await res.json();
+        return json;
+    })
+
+    const onClickHandler = e => {
+        e.preventDefault()
+        let s = document.getElementById('strategy').value
+        if (state.url === '') {
+            setState({url:'https://www.tabnews.com.br/api/v1contents?&per_page=30&',strategy:s})
+            console.log(state.url)
+        }
+        else setState({url:'',strategy: state.strategy})
     }
 
 
-    if (error) return <div>falha na requisição...</div>
-    if (!data) return(
+
+    return (
         <div>
-            <Stack spacing={1}>
-                <Skeleton variant="rectangular" width={'100%'} height={80} />
-                <Skeleton variant="rectangular" width={'100%'} height={100} />
-                <Skeleton variant="rectangular" width={'100%'} height={100} />
-                <Skeleton variant="rectangular" width={'100%'} height={100} />
-                <Skeleton variant="rectangular" width={'100%'} height={100} />
-                <Skeleton variant="rectangular" width={'100%'} height={100} />
-          </Stack>
+            <TheForm/>
+            <TheLink url={state.url} handler={onClickHandler} />
+            <TheNews data={data ? data: {Search:''} } show={state.url !== ''} />       
         </div>
     )
 
-    return (    
-        <div>  
-            
-            <form method="GET" style={{marginBottom: "20px"}}>
-                <TextField type="text" label="Pesquise por autor" variant="outlined"/>
-                <Button><input type="submit" value="&#128269;"></input></Button>
-                <Box sx={{ minWidth: 200 }}>
-                    <FormControl>
-                        <InputLabel id="demo-simple-select-label">Filtrar por</InputLabel>
-                        <Select
-                            labelId="demo-simple-select-label"
-                            id="demo-simple-select"
-                            value={selected}
-                            label="Age"
-                            onChange={(e) => setSelected(e.target.value)}
-                        >
-                            <MenuItem value='new' key='new'>new</MenuItem>
-                            <MenuItem value='relevant' key='relevant'>relevant</MenuItem>
-                            <MenuItem value='old' key='old'>old</MenuItem>                            
-                        </Select>
-                        <Button type="submit">
-                            Submit
-                        </Button>
-                        <Typography variant="body1" color="text.primary">teste: {selected}</Typography>
-                        
-                    </FormControl>
-                </Box>
-            </form>
+}
 
-            {(data.map((m) => 
-                        <Stack spacing="10px">
-                            <Card sx={{ maxWidth: "100%", margin: "8px 2vh", display: "block"}}>
-                                    <CardContent>
-                                        <Typography gutterBottom variant="h5" component="div">
-                                            {m.title}
-                                        </Typography>
-                                        <Typography variant="body1" color="text.primary">{m.owner_username}</Typography>
-                                        <Typography variant="body2" color="text.secondary">{m.title}...</Typography>
-                                        <Typography variant="body2" color="text.secondary">{m.published_at}</Typography>
-                                        <br/>
-                                        <Button variant="contained" size="small" key={`${m.owner_username}/${m.slug}`} href={`/selectednews/${m.owner_username}__${m.slug}`}>Ver mais</Button>
-                                        
-                                    </CardContent>
-                            </Card>
-                        </Stack>))
-            }
-        </div> 
+export function TheForm(){
+    return (        
+        <form>
+            <input id="strategy" name="strategy" type="text" autoComplete="true" placeholder='Busque aqui'/>
+        </form>
+        
     )
 }
 
-async function fetcher(url) {
-    const res = await fetch(url);
-    const json = await res.json();
-    return json;
+
+export function TheNews({data,show}){
+    if (!show) return (<div>Não mostrou </div>)
+    if (!data) return (<div>
+        Teste vazio
+    </div>)
+    if (data.error) return (<div>falha na pesquisa</div>)
+    if (data.Search === '' ) return (<div>
+        nothing
+    </div>)
+
+    return (
+        <div>
+            {data.Search.map( (data) => 
+                <Card sx={{ maxWidth: "100%", margin: "8px 2vh", display: "block"}}>
+                    <CardContent>
+                    <Typography gutterBottom variant="h4" component="div">
+                        {data.title}
+                    </Typography>
+
+                    <Typography variant="body1" color="text.secundary">
+                        Autor: <Link href={`https://www.tabnews.com.br/${data.owner_username}`} target="_blank" underline="hover">{data.owner_username}</Link>
+                        <br/>
+                        <Link href="#" underline="hover">Ver mais desse autor</Link>
+                    </Typography>
+                    
+                    <Typography variant="body1" color="text.secondary">
+                        <strong>Prelúdio:</strong> <MuiMarkdown>{data.body}</MuiMarkdown>
+                    </Typography>
+                    <br/>
+                    <Typography variant="body5" color="text.secondary">
+                        <strong>Data de publicação:</strong> {data.updated_at}
+                    </Typography> 
+                    <br/><br/>
+                    <Stack direction="row" spacing={1}>
+                        {disabledButton(data.source_url)}
+                        <Button variant="contained" href='../'>Página inicial</Button>
+                    </Stack>
+                    </CardContent>                              
+                </Card>
+                )
+            }           
+
+        </div>
+    )
+}
+
+export function TheLink({url, handler}){
+    return (
+        <div>
+            <Button href="./" onClick={handler} variant='contained'> {url === '' ? 'Mostrar' : 'Ocultar'}</Button>
+        </div>
+    )
+}
+
+export function disabledButton(url){
+    if (url == null) return (<Button variant="contained" disabled>Noticia completa</Button> )
+    return(
+      <Button variant="contained" href={url} target='_blank'>Noticia completa</Button> 
+    )
 }
