@@ -32,7 +32,7 @@ export default function NewHome(){
         e.preventDefault()
         let s = document.getElementById('strategy').value
         if (state.url === '') {
-            setState({url:'https://www.tabnews.com.br/api/v1contents?&per_page=30&',strategy:s})
+            setState({url:'https://www.tabnews.com.br/api/v1/contents?&per_page=30&strategy=', strategy:s})
             console.log(state.url)
         }
         else setState({url:'',strategy: state.strategy})
@@ -72,7 +72,7 @@ export function TheNews({data,show}){
 
     return (
         <div>
-            {data.Search.map( (data) => 
+            {data.map((data) => 
                 <Card sx={{ maxWidth: "100%", margin: "8px 2vh", display: "block"}}>
                     <CardContent>
                     <Typography gutterBottom variant="h4" component="div">
@@ -96,6 +96,8 @@ export function TheNews({data,show}){
                     <Stack direction="row" spacing={1}>
                         {disabledButton(data.source_url)}
                         <Button variant="contained" href='../'>Página inicial</Button>
+
+                        <Button variant="contained" size="small" key={`${data.owner_username}/${data.slug}`} href={`/selectednews/${data.owner_username}__${data.slug}`}>Ver mais</Button>
                     </Stack>
                     </CardContent>                              
                 </Card>

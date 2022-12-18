@@ -1,42 +1,42 @@
 {
-  "../node_modules/mui-markdown/dist/index.es.js -> @mui/material/Button": {
-    "id": "../node_modules/mui-markdown/dist/index.es.js -> @mui/material/Button",
+  "..\\node_modules\\mui-markdown\\dist\\index.es.js -> @mui/material/Button": {
+    "id": "..\\node_modules\\mui-markdown\\dist\\index.es.js -> @mui/material/Button",
     "files": []
   },
-  "../node_modules/mui-markdown/dist/index.es.js -> @mui/material/Link": {
-    "id": "../node_modules/mui-markdown/dist/index.es.js -> @mui/material/Link",
+  "..\\node_modules\\mui-markdown\\dist\\index.es.js -> @mui/material/Link": {
+    "id": "..\\node_modules\\mui-markdown\\dist\\index.es.js -> @mui/material/Link",
     "files": []
   },
-  "../node_modules/mui-markdown/dist/index.es.js -> @mui/material/ListItemText": {
-    "id": "../node_modules/mui-markdown/dist/index.es.js -> @mui/material/ListItemText",
+  "..\\node_modules\\mui-markdown\\dist\\index.es.js -> @mui/material/ListItemText": {
+    "id": "..\\node_modules\\mui-markdown\\dist\\index.es.js -> @mui/material/ListItemText",
     "files": []
   },
-  "../node_modules/mui-markdown/dist/index.es.js -> @mui/material/Table": {
-    "id": "../node_modules/mui-markdown/dist/index.es.js -> @mui/material/Table",
+  "..\\node_modules\\mui-markdown\\dist\\index.es.js -> @mui/material/Table": {
+    "id": "..\\node_modules\\mui-markdown\\dist\\index.es.js -> @mui/material/Table",
     "files": []
   },
-  "../node_modules/mui-markdown/dist/index.es.js -> @mui/material/TableBody": {
-    "id": "../node_modules/mui-markdown/dist/index.es.js -> @mui/material/TableBody",
+  "..\\node_modules\\mui-markdown\\dist\\index.es.js -> @mui/material/TableBody": {
+    "id": "..\\node_modules\\mui-markdown\\dist\\index.es.js -> @mui/material/TableBody",
     "files": []
   },
-  "../node_modules/mui-markdown/dist/index.es.js -> @mui/material/TableCell": {
-    "id": "../node_modules/mui-markdown/dist/index.es.js -> @mui/material/TableCell",
+  "..\\node_modules\\mui-markdown\\dist\\index.es.js -> @mui/material/TableCell": {
+    "id": "..\\node_modules\\mui-markdown\\dist\\index.es.js -> @mui/material/TableCell",
     "files": []
   },
-  "../node_modules/mui-markdown/dist/index.es.js -> @mui/material/TableFooter": {
-    "id": "../node_modules/mui-markdown/dist/index.es.js -> @mui/material/TableFooter",
+  "..\\node_modules\\mui-markdown\\dist\\index.es.js -> @mui/material/TableFooter": {
+    "id": "..\\node_modules\\mui-markdown\\dist\\index.es.js -> @mui/material/TableFooter",
     "files": []
   },
-  "../node_modules/mui-markdown/dist/index.es.js -> @mui/material/TableHead": {
-    "id": "../node_modules/mui-markdown/dist/index.es.js -> @mui/material/TableHead",
+  "..\\node_modules\\mui-markdown\\dist\\index.es.js -> @mui/material/TableHead": {
+    "id": "..\\node_modules\\mui-markdown\\dist\\index.es.js -> @mui/material/TableHead",
     "files": []
   },
-  "../node_modules/mui-markdown/dist/index.es.js -> @mui/material/TableRow": {
-    "id": "../node_modules/mui-markdown/dist/index.es.js -> @mui/material/TableRow",
+  "..\\node_modules\\mui-markdown\\dist\\index.es.js -> @mui/material/TableRow": {
+    "id": "..\\node_modules\\mui-markdown\\dist\\index.es.js -> @mui/material/TableRow",
     "files": []
   },
-  "../node_modules/mui-markdown/dist/index.es.js -> @mui/material/Typography": {
-    "id": "../node_modules/mui-markdown/dist/index.es.js -> @mui/material/Typography",
+  "..\\node_modules\\mui-markdown\\dist\\index.es.js -> @mui/material/Typography": {
+    "id": "..\\node_modules\\mui-markdown\\dist\\index.es.js -> @mui/material/Typography",
     "files": []
   }
 }
