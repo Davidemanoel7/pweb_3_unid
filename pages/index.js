@@ -12,6 +12,13 @@ import Stack from '@mui/material/Stack';
 import MuiMarkdown from 'mui-markdown';
 
 
+import Box from '@mui/material/Box';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
+
+
 //Skeleton
 import Skeleton from '@mui/material/Skeleton';
 
@@ -19,55 +26,66 @@ import Skeleton from '@mui/material/Skeleton';
 
 export default function NewHome(){
 
-    const [state, setState] = useState({url:'', strategy:''})
-    const {data, error} = useSWR(state.url, async (u) => {
-        if (!state.url || !state.strategy) return {Search:''}
-        if (state.url === '' || state.strategy ==='') return {Search:''}
-        const res = await fetch(`${state.url}${state.strategy}`)
+    const [state, setState] = useState({url:'https://www.tabnews.com.br/api/v1/contents', category:''})
+    const {data, error} = useSWR(state, async (u) => {
+        if (u.url === '') return {Search:''}
+        const res = await fetch(`${u.url}${u.category}`)
         const json = await res.json();
         return json;
     })
 
-    const onClickHandler = e => {
-        e.preventDefault()
-        let s = document.getElementById('strategy').value
-        if (state.url === '') {
-            setState({url:'https://www.tabnews.com.br/api/v1/contents?&per_page=30&strategy=', strategy:s})
-            console.log(state.url)
-        }
-        else setState({url:'',strategy: state.strategy})
+    const onClickHandler = (e) => {
+        let s = e.target.value
+        setState({url:'https://www.tabnews.com.br/api/v1/contents?&per_page=30&strategy=', category:s})
+        /*
+        if (state === '') {
+            setState({url:'https://www.tabnews.com.br/api/v1/contents?&per_page=30&strategy=', category:s})
+        }*/
     }
-
-
 
     return (
         <div>
-            <TheForm/>
-            <TheLink url={state.url} handler={onClickHandler} />
+            <div>
+            <Box sx={{ minWidth: 120, margin:'16px auto', display: 'inline'}}>
+                <FormControl sx={{ minWidth: '40%'  }}>
+                <InputLabel id="demo-simple-select-label">Category</InputLabel>
+                <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    value={state.category}
+                    label="Category"
+                    onChange={onClickHandler}>
+                    <MenuItem value='old'>Old</MenuItem>
+                    <MenuItem value='new'>New</MenuItem>
+                    <MenuItem value='relevant'>Relevant</MenuItem>
+                </Select>
+                </FormControl>
+            </Box>
+            </div>            
             <TheNews data={data ? data: {Search:''} } show={state.url !== ''} />       
         </div>
     )
 
 }
 
-export function TheForm(){
-    return (        
-        <form>
-            <input id="strategy" name="strategy" type="text" autoComplete="true" placeholder='Busque aqui'/>
-        </form>
-        
-    )
-}
-
-
 export function TheNews({data,show}){
-    if (!show) return (<div>Não mostrou </div>)
-    if (!data) return (<div>
-        Teste vazio
-    </div>)
-    if (data.error) return (<div>falha na pesquisa</div>)
-    if (data.Search === '' ) return (<div>
-        nothing
+    if (!show) return (<div>Não mostrou</div>)
+    if (!data) return (
+        <div>
+            vazio
+        </div>
+    )
+    if (data.error) return (<div>Falha na pesquisa</div>)
+    if (data.Search === '' ) return(
+    <div>
+        <Stack spacing={1}>
+              <Skeleton variant="text" sx={{ fontSize: '2.5rem', height:"120" }} />
+              <Skeleton variant="rectangular" width={'100%'} height={100} />
+              <Skeleton variant="rectangular" width={'100%'} height={100} />
+              <Skeleton variant="rectangular" width={'100%'} height={100} />
+              <Skeleton variant="rectangular" width={'100%'} height={100} />
+              <Skeleton variant="rectangular" width={'100%'} height={100} />
+          </Stack>
     </div>)
 
     return (
@@ -81,37 +99,23 @@ export function TheNews({data,show}){
 
                     <Typography variant="body1" color="text.secundary">
                         Autor: <Link href={`https://www.tabnews.com.br/${data.owner_username}`} target="_blank" underline="hover">{data.owner_username}</Link>
-                        <br/>
-                        <Link href="#" underline="hover">Ver mais desse autor</Link>
-                    </Typography>
-                    
-                    <Typography variant="body1" color="text.secondary">
-                        <strong>Prelúdio:</strong> <MuiMarkdown>{data.body}</MuiMarkdown>
                     </Typography>
                     <br/>
                     <Typography variant="body5" color="text.secondary">
-                        <strong>Data de publicação:</strong> {data.updated_at}
+                        <strong>{data.title}...</strong>
+                    </Typography>
+                    <br/>
+                    <Typography variant="body5" color="text.secondary">
+                        Data de publicação: {data.updated_at}
                     </Typography> 
                     <br/><br/>
                     <Stack direction="row" spacing={1}>
-                        {disabledButton(data.source_url)}
-                        <Button variant="contained" href='../'>Página inicial</Button>
-
                         <Button variant="contained" size="small" key={`${data.owner_username}/${data.slug}`} href={`/selectednews/${data.owner_username}__${data.slug}`}>Ver mais</Button>
                     </Stack>
                     </CardContent>                              
                 </Card>
                 )
-            }           
-
-        </div>
-    )
-}
-
-export function TheLink({url, handler}){
-    return (
-        <div>
-            <Button href="./" onClick={handler} variant='contained'> {url === '' ? 'Mostrar' : 'Ocultar'}</Button>
+            }
         </div>
     )
 }
