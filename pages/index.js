@@ -25,7 +25,6 @@ import Skeleton from '@mui/material/Skeleton';
 
 
 export default function NewHome(){
-
     const [state, setState] = useState({url:'https://www.tabnews.com.br/api/v1/contents', category:''})
     const {data, error} = useSWR(state, async (u) => {
         if (u.url === '') return {Search:''}
@@ -102,11 +101,11 @@ export function TheNews({data,show}){
                     </Typography>
                     <br/>
                     <Typography variant="body5" color="text.secondary">
-                        <strong>{data.title}...</strong>
+                        <strong>{Publi(data.title)}</strong>
                     </Typography>
                     <br/>
                     <Typography variant="body5" color="text.secondary">
-                        Data de publicação: {data.updated_at}
+                        Data de publicação: {data.updated_at.slice(0,10)}
                     </Typography> 
                     <br/><br/>
                     <Stack direction="row" spacing={1}>
@@ -125,4 +124,13 @@ export function disabledButton(url){
     return(
       <Button variant="contained" href={url} target='_blank'>Noticia completa</Button> 
     )
+}
+
+export function Publi (data) {
+    if(data == null) return (
+        <strong>Comentário</strong>
+    ) 
+    return (<Typography variant="body5" color="text.    secondary">
+        <strong>{data}...</strong>
+        </Typography>)
 }
