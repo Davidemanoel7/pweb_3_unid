@@ -45,7 +45,7 @@ export default function NewHome(){
     return (
         <div>
             <div>
-            <Box sx={{ minWidth: 120, margin:'16px auto', display: 'inline'}}>
+            <Box sx={{ minWidth: 120, margin:'14px', display: 'inline'}}>
                 <FormControl sx={{ minWidth: '40%'  }}>
                 <InputLabel id="demo-simple-select-label">Category</InputLabel>
                 <Select
@@ -77,13 +77,12 @@ export function TheNews({data,show}){
     if (data.error) return (<div>Falha na pesquisa</div>)
     if (data.Search === '' ) return(
     <div>
-        <Stack spacing={1}>
-              <Skeleton variant="text" sx={{ fontSize: '2.5rem', height:"120" }} />
-              <Skeleton variant="rectangular" width={'100%'} height={100} />
-              <Skeleton variant="rectangular" width={'100%'} height={100} />
-              <Skeleton variant="rectangular" width={'100%'} height={100} />
-              <Skeleton variant="rectangular" width={'100%'} height={100} />
-              <Skeleton variant="rectangular" width={'100%'} height={100} />
+        <Stack spacing={2}>
+              <Skeleton variant="rounded" width={'100%'} height={200}/>
+              <Skeleton variant="rounded" width={'100%'} height={200}/>
+              <Skeleton variant="rounded" width={'100%'} height={200}/>
+              <Skeleton variant="rounded" width={'100%'} height={200}/>
+              <Skeleton variant="rounded" width={'100%'} height={200}/>
           </Stack>
     </div>)
 
@@ -95,9 +94,9 @@ export function TheNews({data,show}){
                     <Typography gutterBottom variant="h4" component="div">
                         {data.title}
                     </Typography>
-
+                    
                     <Typography variant="body1" color="text.secundary">
-                        Autor: <Link href={`https://www.tabnews.com.br/${data.owner_username}`} target="_blank" underline="hover">{data.owner_username}</Link>
+                        Autor: <Link key={`${data.owner_username}/${data.slug}`} href={`../per_autors/${data.owner_username}`} underline="hover">{data.owner_username}</Link>
                     </Typography>
                     <br/>
                     <Typography variant="body5" color="text.secondary">

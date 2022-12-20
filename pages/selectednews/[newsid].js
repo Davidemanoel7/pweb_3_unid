@@ -1,6 +1,3 @@
-import useSWR from 'swr'
-import {useRouter} from 'next/router'
-
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import Link from '@mui/material/Link';
@@ -48,7 +45,7 @@ export default function News({data,error}){
                   <Typography variant="body1" color="text.secundary">
                     Autor: <Link href={`https://www.tabnews.com.br/${data.owner_username}`} target="_blank" underline="hover">{data.owner_username}</Link>
                     <br/>
-                    <Link href="#" underline="hover">Ver mais desse autor</Link>
+                    <Link key={`${data.owner_username}/${data.slug}`} href={`../per_autors/${data.owner_username}`}>Ver mais desse autor</Link>
                   </Typography>
                   
                   <Typography variant="body1" color="text.secondary">
@@ -56,7 +53,7 @@ export default function News({data,error}){
                   </Typography>
                   <br/>
                   <Typography variant="body5" color="text.secondary">
-                      <strong>Data de publicação:</strong> {data.updated_at}
+                      <strong>Data de publicação:</strong> {data.updated_at.slice(0,10)}
                   </Typography> 
                   <br/><br/>
                   <Stack direction="row" spacing={1}>
@@ -80,13 +77,6 @@ return(
 )
 }
 
-async function fetcher(url) {
-    const res = await fetch(url);
-    const json = await res.json();
-    return json;
-}
-
-
 export async function getStaticPaths() {
     const paths = [
       {params: { newsid: 'filipedeschamps__riffusion-usando-o-stable-diffusion-para-gerar-musica-atraves-de-espectrogramas' } },
@@ -95,7 +85,7 @@ export async function getStaticPaths() {
       {params: { newsid: 'designliquido__video-resolvendo-desafio-do-site-os-programadores-com-linguagem-de-programacao-100-por-cento-em-portugues-exercicio-4-xadrez' } },
     ];
     return { paths, fallback: true};
-  }
+}
 
 
 export async function getStaticProps({params}) {  
@@ -105,8 +95,7 @@ export async function getStaticProps({params}) {
       `https://www.tabnews.com.br/api/v1/contents/${owner_username}/${slug}`
     );
    
-    
-    //console.log(`https://www.tabnews.com.br/api/v1/contents/${owner_username}/${slug}`)
+  
 
     try{
       const data = await res.json();
@@ -124,4 +113,13 @@ export async function getStaticProps({params}) {
         },
       };
     }
+}
+
+export function Publi (data) {
+  if(data == null) return (
+      <strong>Comentário</strong>
+  ) 
+  return (<Typography variant="body5" color="text.    secondary">
+      <strong>{data}...</strong>
+      </Typography>)
 }
